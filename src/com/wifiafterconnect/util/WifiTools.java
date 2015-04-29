@@ -24,9 +24,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.util.Log;
-
-import com.wifiafterconnect.Constants;
 
 public class WifiTools {
 
@@ -155,14 +152,15 @@ public class WifiTools {
         }
     }
 
-    public static boolean isWifiConnected (Context context) {
+    public static boolean isWifiAvailable(Context context) {
         NetworkInfo wifiNetworkInfo = getFirstWifiNetworkInfo(context);
-        return wifiNetworkInfo != null &&
-                wifiNetworkInfo.getDetailedState() != NetworkInfo.DetailedState.DISCONNECTED;
+        //For some reason, ConnectivityManager shows wifi as disconnected even when connected to
+        //captive portal (but the WifiManager intent showed us the true state).
+        return wifiNetworkInfo != null && wifiNetworkInfo.isAvailable();
     }
 
 	public boolean isWifiConnected (){
-		return isWifiConnected (context);
+		return isWifiAvailable(context);
 	}
 
     public static NetworkInfo getFirstWifiNetworkInfo(Context context) {

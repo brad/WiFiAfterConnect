@@ -51,7 +51,8 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                 Log.d(Constants.TAG, "WifiBroadcastReceiver: Current Wifi state is " +
                         wifiNetworkInfo.getDetailedState() + "/" + wifiNetworkInfo.getState());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                        wifiNetworkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTING) {
+                        wifiNetworkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTING ||
+                        wifiNetworkInfo.getDetailedState() == NetworkInfo.DetailedState.CAPTIVE_PORTAL_CHECK) {
                     onWifiConnectivityChange(context, true);
                 }
             }

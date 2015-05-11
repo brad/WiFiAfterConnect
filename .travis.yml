@@ -1,0 +1,7 @@
+language: android
+
+script:
+  - ./gradlew coverage
+
+after_success:
+  - ./gradlew coveralls

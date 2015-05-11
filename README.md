@@ -27,6 +27,8 @@ portals that do non-standard things, those are:
 Building
 --------
 
+Make sure you have OpenJDK 7 or Oracle JDK 7-8
+
 1. Make sure you have the [Android SDK](https://developer.android.com/sdk/installing/index.html) installed
 2. In the source directory, generate build scripts with
 

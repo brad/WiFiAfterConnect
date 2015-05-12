@@ -66,11 +66,11 @@ task coverage(type:JacocoReport, dependsOn: "testRelease") {
     description = "Coverage Report"
 
     classDirectories = fileTree(
-        dir: "$buildDir/intermediates/classes/debug"
+        dir: "$buildDir/intermediates/classes/release"
     )
 
     sourceDirectories = srcDirs
-    executionData = files("$buildDir/jacoco/testDebug.exec")
+    executionData = files("$buildDir/jacoco/testRelease.exec")
 
     reports {
         html.enabled = true

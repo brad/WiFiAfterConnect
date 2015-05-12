@@ -1,5 +1,7 @@
 package com.wifiafterconnect.html;
 
+import android.text.InputType;
+
 import junit.framework.TestCase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,15 +10,6 @@ import org.jsoup.nodes.Document;
  * Created by brad on 5/10/15.
  */
 public class HtmlInputTest extends TestCase {
-
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
-    public void tearDown() throws Exception {
-
-    }
-
     public void testHtmlInput() throws Exception {
         // Check defaults
         HtmlInput i = new HtmlInput(null, null, null);
@@ -169,7 +162,12 @@ public class HtmlInputTest extends TestCase {
     }
 
     public void testSetValue() throws Exception {
-
+        HtmlInput i = new HtmlInput(null, null, null);
+        assertEquals("", i.getValue());
+        i.setValue("test_value");
+        assertEquals("test_value", i.getValue());
+        i.setValue(null);
+        assertEquals("", i.getValue());
     }
 
     public void testGetOnClick() throws Exception {
@@ -195,13 +193,47 @@ public class HtmlInputTest extends TestCase {
         StringBuilder postData = new StringBuilder();
         i.formatPostData(postData);
         assertEquals("&ctl00%24ContentPlaceHolder1%24submit=+", postData.toString());
+        i = new HtmlInput("image_name", HtmlInput.TYPE_IMAGE, "image_value");
+        postData = new StringBuilder();
+        i.formatPostData(postData);
+        assertEquals("&x=1&y=1", postData.toString());
     }
 
     public void testGetAndroidInputType() throws Exception {
-
+        HtmlInput i = new HtmlInput(null, null, null);
+        assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_TEXT);
+        i.setType(HtmlInput.TYPE_PASSWORD);
+        assertEquals(i.getAndroidInputType(),
+                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        i.setType(HtmlInput.TYPE_EMAIL);
+        assertEquals(i.getAndroidInputType(),
+                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        i.setType(HtmlInput.TYPE_NUMBER);
+        assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_NUMBER);
+        i.setType(HtmlInput.TYPE_TEL);
+        assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_NUMBER);
+        i.setType(HtmlInput.TYPE_DATE);
+        assertEquals(i.getAndroidInputType(),
+                InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_DATE);
+        i.setType(HtmlInput.TYPE_DATETIME);
+        assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_DATETIME);
+        i.setType(HtmlInput.TYPE_DATETIME_LOCAL);
+        assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_DATETIME);
+        i.setType(HtmlInput.TYPE_TIME);
+        assertEquals(i.getAndroidInputType(),
+                InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_TIME);
+        i.setType("FAKE_TYPE");
+        assertEquals(i.getAndroidInputType(), 0);
     }
 
     public void testToString() throws Exception {
+        Document doc = Jsoup.parse("<input onClick=\"javascript:alert('test')\" form=\"hidden_form\" class=\"hidden_class\" type=\"hidden\" name=\"hidden_name\" value=\"hidden_value\">");
+        HtmlInput i = new HtmlInput(doc.getElementsByTag("input").first(), false);
+        assertEquals("<input name=\"hidden_name\" type=\"hidden\" value=\"hidden_value\" class=\"hidden_class\" onClick=\"javascript:alert('test')\" form=\"hidden_form\" checked=\"\">", i.toString());
 
+
+        doc = Jsoup.parse("<input checked='true' type='checkbox'>");
+        i = new HtmlInput(doc.getElementsByTag("input").first(), false);
+        assertEquals("<input name=\"\" type=\"checkbox\" value=\"\" class=\"\" onClick=\"\" form=\"\" checked=\"true\">", i.toString());
     }
 }

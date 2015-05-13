@@ -110,6 +110,9 @@ public class HtmlInputTest extends TestCase {
         assertEquals(false, i.isValid());
         i = new HtmlInput("", null, null);
         assertEquals(false, i.isValid());
+        i = new HtmlInput(null, "submit", null);
+        // TODO: Is this right? I think it is quite common for submit inputs to be nameless
+        assertEquals(false, i.isValid());
         i = new HtmlInput("VALID_NAME", null, null);
         assertEquals(true, i.isValid());
         i = new HtmlInput("ANY NON-EMPTY NAME IS VALID", null, null);

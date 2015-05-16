@@ -8,6 +8,7 @@ android:
    - tools
    - platform-tools
    - extras
+   - extra-android-m2repository
    - extra-android-support
 
 script:

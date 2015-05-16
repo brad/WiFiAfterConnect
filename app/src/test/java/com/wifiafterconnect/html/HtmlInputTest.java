@@ -2,25 +2,32 @@ package com.wifiafterconnect.html;
 
 import android.text.InputType;
 
-import junit.framework.TestCase;
+import com.wifiafterconnect.BaseTestCase;
+
+import static org.junit.Assert.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.junit.Test;
 
 /**
  * Created by brad on 5/10/15.
+ *
+ * For testing the com.wifiafterconnect.html.HtmlInput class
  */
-public class HtmlInputTest extends TestCase {
+public class HtmlInputTest extends BaseTestCase {
+
+    @Test
     public void testHtmlInput() throws Exception {
         // Check defaults
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getName());
         assertEquals("text", i.getType());
         assertEquals("", i.getValue());
-        assertEquals(false, i.isClass("FAKE_CLASS"));
-        assertEquals(true, i.isClass(""));
+        assertFalse(i.isClass("FAKE_CLASS"));
+        assertTrue(i.isClass(""));
         assertEquals("", i.getOnClick());
         assertEquals("", i.getFormId());
-        assertEquals(false, i.isHidden());
+        assertFalse(i.isHidden());
         assertEquals("<input name=\"\" type=\"text\" value=\"\" class=\"\" onClick=\"\" form=\"\" checked=\"\">", i.toString());
 
         // Test non-defaults
@@ -36,11 +43,11 @@ public class HtmlInputTest extends TestCase {
         assertEquals("", i.getName());
         assertEquals("checkbox", i.getType());
         assertEquals("", i.getValue());
-        assertEquals(true, i.isClass(""));
-        assertEquals(false, i.isClass("fake_class"));
+        assertTrue(i.isClass(""));
+        assertFalse(i.isClass("fake_class"));
         assertEquals("", i.getOnClick());
         assertEquals("", i.getFormId());
-        assertEquals(false, i.isHidden());
+        assertFalse(i.isHidden());
         assertEquals("<input name=\"\" type=\"checkbox\" value=\"\" class=\"\" onClick=\"\" form=\"\" checked=\"true\">", i.toString());
 
         doc = Jsoup.parse("<input onClick=\"javascript:alert('test')\" form=\"hidden_form\" class=\"hidden_class\" type=\"hidden\" name=\"hidden_name\" value=\"hidden_value\">");
@@ -48,11 +55,11 @@ public class HtmlInputTest extends TestCase {
         assertEquals("hidden_name", i.getName());
         assertEquals("hidden", i.getType());
         assertEquals("hidden_value", i.getValue());
-        assertEquals(true, i.isClass("hidden_class"));
-        assertEquals(false, i.isClass("fake_class"));
+        assertTrue(i.isClass("hidden_class"));
+        assertFalse(i.isClass("fake_class"));
         assertEquals("javascript:alert('test')", i.getOnClick());
         assertEquals("hidden_form", i.getFormId());
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
         String hidden_html = "<input name=\"hidden_name\" type=\"hidden\" value=\"hidden_value\" class=\"hidden_class\" onClick=\"javascript:alert('test')\" form=\"hidden_form\" checked=\"\">";
         assertEquals(hidden_html, i.toString());
 
@@ -61,14 +68,15 @@ public class HtmlInputTest extends TestCase {
         assertEquals(hidden.getName(), i.getName());
         assertEquals(hidden.getType(), i.getType());
         assertEquals(hidden.getValue(), i.getValue());
-        assertEquals(true, hidden.isClass("hidden_class"));
-        assertEquals(false, hidden.isClass("fake_class"));
+        assertTrue(hidden.isClass("hidden_class"));
+        assertFalse(hidden.isClass("fake_class"));
         assertEquals(hidden.getOnClick(), i.getOnClick());
         assertEquals(hidden.getFormId(), i.getFormId());
         assertEquals(hidden.isHidden(), i.isHidden());
         assertEquals(hidden_html, hidden.toString());
     }
 
+    @Test
     public void testSetType() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("text", i.getType());
@@ -82,45 +90,48 @@ public class HtmlInputTest extends TestCase {
         assertEquals("text", i.getType());
     }
 
+    @Test
     public void testIsHidden() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
-        assertEquals(false, i.isHidden());
+        assertFalse(i.isHidden());
         i.setType(HtmlInput.TYPE_RADIO);
-        assertEquals(false, i.isHidden());
+        assertFalse(i.isHidden());
         i.setType(HtmlInput.TYPE_HIDDEN);
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
         i.setType("HIDDEN");
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
         Document doc = Jsoup.parse("<input type='hidden' name='hidden_name' value='hidden_value'>");
         i = new HtmlInput(doc.getElementsByTag("input").first(), false);
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
         doc = Jsoup.parse("<input type='HIDDEN' name='hidden_name' value='hidden_value'>");
         i = new HtmlInput(doc.getElementsByTag("input").first(), false);
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
         doc = Jsoup.parse("<input type='text' name='hidden_name' value='hidden_value'>");
         i = new HtmlInput(doc.getElementsByTag("input").first(), false);
-        assertEquals(false, i.isHidden());
+        assertFalse(i.isHidden());
         doc = Jsoup.parse("<input type='text' name='hidden_name' value='hidden_value'>");
         i = new HtmlInput(doc.getElementsByTag("input").first(), true);
-        assertEquals(true, i.isHidden());
+        assertTrue(i.isHidden());
     }
 
+    @Test
     public void testIsValid() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
-        assertEquals(false, i.isValid());
+        assertFalse(i.isValid());
         i = new HtmlInput("", null, null);
-        assertEquals(false, i.isValid());
+        assertFalse(i.isValid());
         i = new HtmlInput(null, "submit", null);
         // TODO: Is this right? I think it is quite common for submit inputs to be nameless
-        assertEquals(false, i.isValid());
+        assertFalse(i.isValid());
         i = new HtmlInput("VALID_NAME", null, null);
-        assertEquals(true, i.isValid());
+        assertTrue(i.isValid());
         i = new HtmlInput("ANY NON-EMPTY NAME IS VALID", null, null);
-        assertEquals(true, i.isValid());
+        assertTrue(i.isValid());
         i = new HtmlInput("INVALID @*#&%!@)(*&@#&%", null, null);
-        assertEquals(true, i.isValid());
+        assertTrue(i.isValid());
     }
 
+    @Test
     public void testGetName() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getName());
@@ -128,6 +139,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("real_name", i.getName());
     }
 
+    @Test
     public void testGetType() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("text", i.getType());
@@ -137,6 +149,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("FAKE_TYPE", i.getType());
     }
 
+    @Test
     public void testGetValue() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getValue());
@@ -144,6 +157,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("real_value", i.getValue());
     }
 
+    @Test
     public void testMatchType() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertTrue(i.matchType("text"));
@@ -156,6 +170,7 @@ public class HtmlInputTest extends TestCase {
         assertTrue(i.matchType("fake_type"));
     }
 
+    @Test
     public void testGetFormId() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getFormId());
@@ -164,6 +179,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("form_id", i.getFormId());
     }
 
+    @Test
     public void testSetValue() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getValue());
@@ -173,6 +189,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("", i.getValue());
     }
 
+    @Test
     public void testGetOnClick() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals("", i.getOnClick());
@@ -181,6 +198,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("javascript:alert('test')", i.getOnClick());
     }
 
+    @Test
     public void testIsClass() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertTrue(i.isClass(""));
@@ -191,6 +209,7 @@ public class HtmlInputTest extends TestCase {
         assertTrue(i.isClass("class_name"));
     }
 
+    @Test
     public void testFormatPostData() throws Exception {
         HtmlInput i = new HtmlInput("ctl00$ContentPlaceHolder1$submit", "submit", " ");
         StringBuilder postData = new StringBuilder();
@@ -202,6 +221,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals("&x=1&y=1", postData.toString());
     }
 
+    @Test
     public void testGetAndroidInputType() throws Exception {
         HtmlInput i = new HtmlInput(null, null, null);
         assertEquals(i.getAndroidInputType(), InputType.TYPE_CLASS_TEXT);
@@ -229,6 +249,7 @@ public class HtmlInputTest extends TestCase {
         assertEquals(i.getAndroidInputType(), 0);
     }
 
+    @Test
     public void testToString() throws Exception {
         Document doc = Jsoup.parse("<input onClick=\"javascript:alert('test')\" form=\"hidden_form\" class=\"hidden_class\" type=\"hidden\" name=\"hidden_name\" value=\"hidden_value\">");
         HtmlInput i = new HtmlInput(doc.getElementsByTag("input").first(), false);

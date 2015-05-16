@@ -1,14 +1,26 @@
 package com.wifiafterconnect.html;
 
-import junit.framework.TestCase;
+import com.wifiafterconnect.BaseTestCase;
+import com.wifiafterconnect.BuildConfig;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.net.URL;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
+
 /**
  * Created by brad on 5/11/15.
+ *
+ * Tests the com.wifiafterconnect.html.HtmlForm class
  */
-public class HtmlFormTest extends TestCase {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 21)
+public class HtmlFormTest extends BaseTestCase {
     protected Document document = Jsoup.parse("<form></form>");
     protected HtmlForm empty_form = new HtmlForm(document.getElementsByTag("form").first());
 
@@ -20,6 +32,7 @@ public class HtmlFormTest extends TestCase {
         return formFromHtml(html).isSubmittable();
     }
 
+    @Test
     public void testHtmlForm() throws Exception {
         assertEquals("", empty_form.getId());
         assertEquals("", empty_form.getAction());
@@ -35,21 +48,22 @@ public class HtmlFormTest extends TestCase {
         assertEquals("javascript:alert('test')", f.getOnsubmit());
         assertEquals(1, f.getInputs().size());
         assertEquals(HtmlInput.TYPE_EMAIL, f.getInput("email_name").getType());
-        assertEquals(false, f.getInput("email_name").isHidden());
+        assertFalse(f.getInput("email_name").isHidden());
 
         html = "<form><div class=\"hidedata\"><input type=\"text\" name=\"text_name\"></div></form>";
         f = formFromHtml(html);
         assertEquals(1, f.getInputs().size());
         assertEquals(HtmlInput.TYPE_TEXT, f.getInput("text_name").getType());
-        assertEquals(true, f.getInput("text_name").isHidden());
+        assertTrue(f.getInput("text_name").isHidden());
 
         html = "<form><div class=\"hidden\"><input type=\"text\" name=\"text_name\"></div></form>";
         f = formFromHtml(html);
         assertEquals(1, f.getInputs().size());
         assertEquals(HtmlInput.TYPE_TEXT, f.getInput("text_name").getType());
-        assertEquals(true, f.getInput("text_name").isHidden());
+        assertTrue(f.getInput("text_name").isHidden());
     }
 
+    @Test
     public void testAddInput() throws Exception {
         assertTrue(empty_form.getInputs().isEmpty());
         empty_form.addInput(null);
@@ -63,6 +77,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("button", empty_form.getInput("test_name").getType());
     }
 
+    @Test
     public void testGetOnsubmit() throws Exception {
         assertEquals("", empty_form.getOnsubmit());
         HtmlForm f = formFromHtml("<form onsubmit=\"javascript:alert('test')\"></form>");
@@ -71,6 +86,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("ANYTHING AT ALL", f.getOnsubmit());
     }
 
+    @Test
     public void testGetMethod() throws Exception {
         assertEquals("", empty_form.getMethod());
         HtmlForm f = formFromHtml("<form method=\"get\"></form>");
@@ -85,6 +101,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("FAKEMETHOD", f.getMethod());
     }
 
+    @Test
     public void testGetAction() throws Exception {
         assertEquals("", empty_form.getAction());
         empty_form.setAction(".");
@@ -99,6 +116,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("GOBBLEDIGOOK", empty_form.getAction());
     }
 
+    @Test
     public void testGetId() throws Exception {
         assertEquals("", empty_form.getId());
         HtmlForm f = formFromHtml("<form id=\"form_id\"></form>");
@@ -107,6 +125,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("ANYTHING AT ALL", f.getId());
     }
 
+    @Test
     public void testGetInputs() throws Exception {
         assertTrue(empty_form.getInputs().isEmpty());
         empty_form.addInput(new HtmlInput("test_name", "datetime", null));
@@ -114,12 +133,14 @@ public class HtmlFormTest extends TestCase {
         assertEquals("datetime", ((HtmlInput) empty_form.getInputs().toArray()[0]).getType());
     }
 
+    @Test
     public void testHasInput() throws Exception {
         HtmlForm f = formFromHtml("<form><input type=\"text\" name=\"text_name\"></form>");
         assertTrue(f.hasInput("text_name"));
         assertFalse(f.hasInput("fake_name"));
     }
 
+    @Test
     public void testHasInputWithClass() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\" class=\"text_class\"></form>";
         HtmlForm f = formFromHtml(html);
@@ -127,6 +148,7 @@ public class HtmlFormTest extends TestCase {
         assertFalse(f.hasInputWithClass("fake_class"));
     }
 
+    @Test
     public void testHasVisibleInput() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\"><div class=\"hidden\"><input type=\"text\" name=\"hidden1\"></div><input type=\"hidden\" name=\"hidden2\"></form>";
         HtmlForm f = formFromHtml(html);
@@ -136,49 +158,54 @@ public class HtmlFormTest extends TestCase {
         assertFalse(f.hasVisibleInput("fake_name"));
     }
 
+    @Test
     public void testGetInput() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\" class=\"text_class\"></form>";
         HtmlForm f = formFromHtml(html);
         HtmlInput i = (HtmlInput) f.getInputs().toArray()[0];
         assertEquals(i.getType(), f.getInput("text_name").getType());
         assertEquals(i.getName(), f.getInput("text_name").getName());
-        assertEquals(null, f.getInput("fake_name"));
+        assertNull(f.getInput("fake_name"));
     }
 
+    @Test
     public void testGetVisibleInput() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\"><div class=\"hidden\"><input type=\"text\" name=\"hidden1\"></div><input type=\"hidden\" name=\"hidden2\"></form>";
         HtmlForm f = formFromHtml(html);
         assertEquals(f.getInput("text_name"), f.getVisibleInput("text_name"));
-        assertEquals(null, f.getVisibleInput("hidden1"));
-        assertEquals(null, f.getVisibleInput("hidden2"));
-        assertEquals(null, f.getVisibleInput("fake_name"));
+        assertNull(f.getVisibleInput("hidden1"));
+        assertNull(f.getVisibleInput("hidden2"));
+        assertNull(f.getVisibleInput("fake_name"));
     }
 
+    @Test
     public void testGetVisibleInputByType() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\"><input type=\"text\" name=\"text_name2\"><div class=\"hidden\"><input type=\"image\" name=\"image_name\"></div><input type=\"hidden\" name=\"hidden_name\"><input type=\"datetime\" name=\"datetime_name\"></form>";
         HtmlForm f = formFromHtml(html);
-        // Ihere are multiple text inputs, we can't predict which will be returned
+        // There are multiple text inputs, we can't predict which will be returned
         String visible_text = f.getVisibleInputByType("text").getName();
         assertTrue(visible_text.equals("text_name") || visible_text.equals("text_name2"));
         assertEquals(f.getInput("datetime_name"), f.getVisibleInputByType("datetime"));
-        assertEquals(null, f.getVisibleInputByType("image"));
-        assertEquals(null, f.getVisibleInputByType("hidden"));
+        assertNull(f.getVisibleInputByType("image"));
+        assertNull(f.getVisibleInputByType("hidden"));
     }
 
+    @Test
     public void testSetInputValue() throws Exception {
         String html = "<form><input type=\"text\" name=\"text_name\"><input type=\"hidden\" name=\"hidden_name\"></form>";
         HtmlForm f = formFromHtml(html);
         HtmlInput i = f.getInput("text_name");
         assertEquals("", i.getValue());
-        assertEquals(true, f.setInputValue("text_name", "new_value"));
+        assertTrue(f.setInputValue("text_name", "new_value"));
         assertEquals("new_value", f.getInput("text_name").getValue());
         i = f.getInput("hidden_name");
         assertEquals("", i.getValue());
-        assertEquals(true, f.setInputValue("hidden_name", "hidden_value"));
+        assertTrue(f.setInputValue("hidden_name", "hidden_value"));
         assertEquals("hidden_value", f.getInput("hidden_name").getValue());
-        assertEquals(false, f.setInputValue("fake_name", "fake_value"));
+        assertFalse(f.setInputValue("fake_name", "fake_value"));
     }
 
+    @Test
     public void testFormatPostData() throws Exception {
         String html = "<form><input type=\"submit\" name=\"ctl00$ContentPlaceHolder1$submit\" value=\" \"></form>";
         String postData = formFromHtml(html).formatPostData();
@@ -188,6 +215,7 @@ public class HtmlFormTest extends TestCase {
         assertEquals("x=1&y=1", postData);
     }
 
+    @Test
     public void testFormatActionURL() throws Exception {
         URL url = new URL("http://example.com");
         assertEquals(url, empty_form.formatActionURL(url));
@@ -217,18 +245,22 @@ public class HtmlFormTest extends TestCase {
         assertEquals(new URL("http://example.com/#ref"), f.formatActionURL(url));
     }
 
+    @Test
     public void testFillParams() throws Exception {
 
     }
 
+    @Test
     public void testIsParamMissing() throws Exception {
 
     }
 
+    @Test
     public void testFillInputs() throws Exception {
 
     }
 
+    @Test
     public void testIsSubmittable() throws Exception {
         assertFalse(empty_form.isSubmittable());
 
@@ -261,6 +293,7 @@ public class HtmlFormTest extends TestCase {
         assertFalse(isSubmittable(html));
     }
 
+    @Test
     public void testSetAction() throws Exception {
         assertEquals("", empty_form.getAction());
         empty_form.setAction("http://example.com");

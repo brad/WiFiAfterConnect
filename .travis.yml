@@ -3,10 +3,12 @@ jdk: oraclejdk7
 
 android:
    components:
-   - platform-tools
-   - extra-android-support
    - android-22
    - build-tools-22.0.1
+   - tools
+   - platform-tools
+   - extras
+   - extra-android-support
 
 script:
   - ./gradlew coverage -S

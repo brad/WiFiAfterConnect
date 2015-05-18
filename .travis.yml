@@ -6,8 +6,8 @@ jdk:
 addons:
   artifacts:
     paths:
-    - app/build/outputs/apk/*-debug-*.apk
-    - travis-build-*
+    - $(ls app/build/outputs/apk/*-debug-*.apk)
+    - $(ls travis-build-*)
 
 android:
    components:

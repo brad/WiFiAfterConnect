@@ -3,6 +3,10 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+addons:
+  artifacts: true
+    paths:
+    - app/build/outputs/apk/app-debug.apk
 
 android:
    components:
@@ -15,7 +19,7 @@ android:
    - extra-android-support
 
 script:
-  - ./gradlew clean coverage -S
+  - ./gradlew clean assembleDebug coverage -S
 
 after_success:
   - ./gradlew coveralls

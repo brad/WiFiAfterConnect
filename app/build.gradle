@@ -53,3 +53,5 @@ coveralls {
     jacocoReportPath = "$buildDir/reports/jacoco/coverage/coverage.xml"
     sourceDirs = srcDirs.files.absolutePath
 }
+
+apply from: "../artifacts.gradle"

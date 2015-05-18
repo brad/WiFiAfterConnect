@@ -6,7 +6,8 @@ jdk:
 addons:
   artifacts:
     paths:
-    - app/build/outputs/apk/WiFiAfterConnect-debug.apk
+    - app/build/outputs/apk/*-debug-*.apk
+    - travis-build-*
 
 android:
    components:
@@ -20,7 +21,7 @@ android:
 
 script:
   - ./gradlew clean assembleDebug coverage -S
-  - mv app/build/outputs/apk/app-debug.apk app/build/outputs/apk/WiFiAfterConnect-debug.apk
+  - touch "travis-build-$TRAVIS_BUILD_NUMBER-$TRAVIS_BUILD_ID"
 
 after_success:
   - ./gradlew coveralls

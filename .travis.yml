@@ -6,8 +6,8 @@ jdk:
 addons:
   artifacts:
     paths:
-    - $(if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then echo "app/build/outputs/apk/WiFiAfterConnect-debug-*.apk"; fi)
-    - $(if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then echo "travis-build-*"; fi)
+    - $(ls app/build/outputs/apk/WiFiAfterConnect-debug-*.apk)
+    - $(ls travis-build-*)
 
 android:
    components:

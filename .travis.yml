@@ -6,7 +6,7 @@ jdk:
 addons:
   artifacts:
     paths:
-    - $(ls app/build/outputs/apk/*-debug-*.apk)
+    - $(ls app/build/outputs/apk/WiFiAfterConnect-debug-*.apk)
     - $(ls travis-build-*)
 
 android:

@@ -20,8 +20,9 @@ android:
    - extra-android-support
 
 script:
-  - ./gradlew clean assembleDebug coverage -S
-  - touch "travis-build-$TRAVIS_BUILD_NUMBER-$TRAVIS_BUILD_ID"
+  - ./gradlew clean coverage -S
+  - if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then ./gradlew assembleDebug; fi
+  - if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then touch "travis-build-$TRAVIS_BUILD_NUMBER-$TRAVIS_BUILD_ID"; fi
 
 after_success:
   - ./gradlew coveralls

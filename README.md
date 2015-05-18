@@ -8,7 +8,7 @@ Android app automating logins into Captive Portals often encountered on free and
 Install from [Google Play](https://play.google.com/store/apps/details?id=com.wifiafterconnect).
 
 If you are feeling adventurous and wish to try out new features, you can see a list
-of recent debug builds [here](https://androidwifiafterconnect.s3.amazonaws.com/index.html)
+of recent debug builds [here](https://wifiafterconnect.s3.amazonaws.com/index.html)
 
 
 Supported Portals

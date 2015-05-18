@@ -6,7 +6,7 @@ jdk:
 addons:
   artifacts:
     paths:
-    - app/build/outputs/apk/app-debug.apk
+    - app/build/outputs/apk/WiFiAfterConnect-debug.apk
 
 android:
    components:
@@ -20,6 +20,7 @@ android:
 
 script:
   - ./gradlew clean assembleDebug coverage -S
+  - mv app/build/outputs/apk/app-debug.apk app/build/outputs/apk/WiFiAfterConnect-debug.apk
 
 after_success:
   - ./gradlew coveralls

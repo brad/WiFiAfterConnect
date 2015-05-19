@@ -263,12 +263,41 @@ public class HtmlFormTest extends BaseTestCase {
 
     @Test
     public void testIsParamMissing() throws Exception {
-
+        assertFalse(formFromHtml("<form></form>").isParamMissing(new WifiAuthParams(), ""));
+        assertFalse(formFromHtml("<form></form>").isParamMissing(null, ""));
+        assertFalse(formFromHtml("<form></form>").isParamMissing(null, null));
+        HtmlForm f = formFromHtml("<form><input type=\"text\" name=\"visible_field\" value=\"field_value\"/><input type=\"hidden\" name=\"hidden_field\" value=\"field_value\"/></form>");
+        assertFalse(f.isParamMissing(null, "hidden_field"));
+        assertFalse(f.isParamMissing(new WifiAuthParams(), "hidden_field"));
+        assertTrue(f.isParamMissing(null, "visible_field"));
+        assertTrue(f.isParamMissing(new WifiAuthParams(), "visible_field"));
+        WifiAuthParams wap = f.fillParams(new WifiAuthParams());
+        assertFalse(f.isParamMissing(wap, "visible_field"));
     }
 
     @Test
     public void testFillInputs() throws Exception {
+        // Check with null WifiAuthParams
+        HtmlForm f = formFromHtml("<form></form>");
+        f.fillInputs(null);
+        assertEquals(0, f.getInputs().size());
 
+        // Try with empty WifiAuthParams
+        f.fillInputs(new WifiAuthParams());
+        assertEquals(0, f.getInputs().size());
+
+        // Form with inputs
+        f = formFromHtml("<form><input type=\"text\" name=\"text_field\"/></form>");
+        assertEquals("", f.getInput("text_field").getValue());
+        f.fillInputs(new WifiAuthParams());
+        assertEquals("", f.getInput("text_field").getValue());
+        WifiAuthParams wap = new WifiAuthParams();
+        wap.add(new HtmlInput("datetime_field", "datetime", "datetime_value"));
+        f.fillInputs(wap);
+        assertEquals("", f.getInput("text_field").getValue());
+        wap.add(new HtmlInput("text_field", "text", "text_value"));
+        f.fillInputs(wap);
+        assertEquals("text_value", f.getInput("text_field").getValue());
     }
 
     @Test

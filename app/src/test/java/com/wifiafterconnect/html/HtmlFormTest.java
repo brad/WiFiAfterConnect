@@ -2,6 +2,7 @@ package com.wifiafterconnect.html;
 
 import com.wifiafterconnect.BaseTestCase;
 import com.wifiafterconnect.BuildConfig;
+import com.wifiafterconnect.WifiAuthParams;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -247,7 +248,17 @@ public class HtmlFormTest extends BaseTestCase {
 
     @Test
     public void testFillParams() throws Exception {
-
+        String html = "<form><input type=\"image\" name=\"field_name\" value=\"field_value\"/><input type=\"datetime\" name=\"field_name\" value=\"field_value\"/><input type=\"datetime\" name=\"datetime_name\" value=\"datetime_value\"/><div class=\"hidden\"><input type=\"text\" name=\"text_name\"/></div><input type=\"hidden\" name=\"hidden_name\"/></form>";
+        HtmlForm f = formFromHtml(html);
+        WifiAuthParams wap = f.fillParams(new WifiAuthParams());
+        assertEquals(2, wap.getFields().size());
+        assertTrue(wap.hasParam("field_name"));
+        String field_type = wap.getField("field_name").getType();
+        // there are two inputs with the same name, only one will be added but we don't know which
+        assertTrue(field_type.equals("image") || field_type.equals("datetime"));
+        assertTrue(wap.hasParam("datetime_name"));
+        assertFalse(wap.hasParam("text_name"));
+        assertFalse(wap.hasParam("hidden_name"));
     }
 
     @Test

@@ -1,7 +1,7 @@
 WiFiAfterConnect
 ================
 
-[![Build Status](https://travis-ci.org/brad/WiFiAfterConnect.svg?branch=lollipop)](https://travis-ci.org/brad/WiFiAfterConnect) [![Coverage Status](https://coveralls.io/repos/brad/WiFiAfterConnect/badge.svg?branch=lollipop)](https://coveralls.io/r/brad/WiFiAfterConnect?branch=lollipop)
+[![Build Status](https://travis-ci.org/brad/WiFiAfterConnect.svg?branch=lollipop)](https://travis-ci.org/brad/WiFiAfterConnect) [![Coverage Status](https://coveralls.io/repos/brad/WiFiAfterConnect/badge.svg?branch=lollipop)](https://coveralls.io/r/brad/WiFiAfterConnect?branch=lollipop) [![Dependency Status](https://www.versioneye.com/user/projects/555b80b9634daacd4100022c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/555b80b9634daacd4100022c)
 
 Android app automating logins into Captive Portals often encountered on free and many non-free Wi-Fi hostpots.
 

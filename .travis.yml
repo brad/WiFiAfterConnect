@@ -21,8 +21,8 @@ android:
 
 script:
   - ./gradlew clean coverage -S
-  - if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then ./gradlew assembleDebug; fi
-  - if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then touch "travis-build-$TRAVIS_BUILD_NUMBER-$TRAVIS_BUILD_ID"; fi
 
 after_success:
+  # For one of the JDKs (arbitrarily chosen) create an APK and file with the travis build id for upload to S3
+  - if [ "$TRAVIS_JDK_VERSION" == 'oraclejdk8' ]; then ./gradlew assembleDebug; touch "travis-build-$TRAVIS_BUILD_NUMBER-$TRAVIS_BUILD_ID"; fi
   - ./gradlew coveralls

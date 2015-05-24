@@ -9,17 +9,16 @@ addons:
 env:
   - ANDROID='22'
   - ANDROID='21'
-  - ANDROID='20'
   - ANDROID='19'
   - ANDROID='18'
   - ANDROID='17'
   - ANDROID='16'
   - ANDROID='15'
-  - ANDROID='14'
 
 android:
    components:
    - android-22
+   - android-$ANDROID
    - sys-img-armeabi-v7a-android-$ANDROID
    - build-tools-22.0.1
    - tools

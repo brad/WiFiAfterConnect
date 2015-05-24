@@ -18,7 +18,6 @@ env:
 android:
    components:
    - android-22
-   - android-$ANDROID
    - sys-img-armeabi-v7a-android-$ANDROID
    - build-tools-22.0.1
    - tools
